@@ -1,0 +1,95 @@
+# FineTune Eval
+
+[![CI](https://github.com/alirezaRanjbar4/finetune-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/alirezaRanjbar4/finetune-eval/actions/workflows/ci.yml)
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**Did fine-tuning improve the answers you care about? Compare saved outputs on the same test set.**
+
+A C# / .NET 10 CLI that compares baseline and candidate model outputs against reference answers. It enforces complete case coverage, computes exact-match and word-token F1, and returns a failing exit code when your CI quality gates are missed.
+
+All evaluation runs locally on saved JSONL. No model calls, API keys, or paid evaluation service are needed.
+
+## Quick start
+
+Requires the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+```sh
+git clone https://github.com/alirezaRanjbar4/finetune-eval.git
+cd finetune-eval
+dotnet run --project src/Cli -- compare --cases examples/cases.jsonl --baseline examples/baseline.jsonl --candidate examples/candidate.jsonl --min-exact 1 --min-f1 1 --max-drop 0
+```
+
+The three synthetic examples pass: candidate answers match their references. They demonstrate the tool, not measured improvements to an actual trained model.
+
+## Inputs
+
+Evaluation cases, one per line in `cases.jsonl`:
+
+```json
+{"id":"refund-policy","references":["14 days","fourteen days"]}
+```
+
+Both `baseline.jsonl` and `candidate.jsonl` use:
+
+```json
+{"id":"refund-policy","output":"14 days"}
+```
+
+IDs are case-sensitive and must be unique. Both output files must cover **all and only** the evaluation IDs. Order may differ. Missing/extra IDs, null outputs, blank references, empty datasets, invalid JSON, and duplicate JSON property names are rejected. Empty prediction strings are allowed and scored.
+
+Generate model outputs independently using the same held-out test cases, prompts, and decoding policy. Keep this set separate from training data. This CLI scores your files; it does not prove their provenance or whether the test data leaked into training.
+
+## Metrics
+
+- **Exact match:** Unicode NFKC, invariant lowercase, whitespace trimming/collapse, then string equality. Punctuation is significant.
+- **Token F1:** Unicode letter/mark/number/ZWNJ word tokens, with NFKC/lowercase normalization. Compute multiset overlap: `2 × shared-token-count / (prediction-token-count + reference-token-count)`.
+- **Multiple references:** take the best exact match and the best F1 independently.
+- **Aggregation:** average each metric over all cases with equal weight. Report candidate minus baseline deltas.
+- If either side has no word tokens, F1 is `1` only when the normalized full strings match; otherwise `0`.
+
+Token overlap is a lexical signal. It does not measure factual correctness, safety, reasoning, semantic equivalence, or open-ended writing quality. Persian/Arabic letter variants and punctuation have no extra language-specific mapping beyond NFKC. These definitions are this tool's metric policy, not a claim of exact compatibility with another evaluation suite.
+
+## CI gates
+
+```sh
+finetune-eval compare --cases cases.jsonl --baseline baseline.jsonl --candidate candidate.jsonl --min-exact 0.8 --min-f1 0.85 --max-drop 0
+```
+
+Thresholds are fractions in `[0,1]`, not percentages. Candidate average exact match and F1 must meet their minima; **neither** metric may drop by more than `--max-drop` versus baseline. Defaults are minimums `0`, maximum drop `1` (reporting without a restrictive gate). Comparisons allow a `1e-12` floating-point tolerance.
+
+Exit codes: `0` gates pass, `1` a gate fails, `2` invalid input/arguments or an unreadable file. JSON goes to standard output, argument/data errors to standard error.
+
+Reports contain aggregate scores, thresholds, and per-ID scores, without reference or prediction text. IDs remain visible, so use opaque identifiers for sensitive test cases.
+
+## Install
+
+Download `FineTuneEval.Tool.0.1.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.1.0) into an empty folder:
+
+```sh
+dotnet tool install --global FineTuneEval.Tool --version 0.1.0 --add-source ./downloaded-package
+finetune-eval --help
+```
+
+Or build from source:
+
+```sh
+dotnet pack src/Cli -c Release -o artifacts
+dotnet tool install --global FineTuneEval.Tool --version 0.1.0 --add-source ./artifacts
+```
+
+The tool has no runtime package dependencies. Packages are distributed through GitHub Releases, not NuGet.org.
+
+## Development and feedback
+
+```sh
+dotnet test -c Release
+dotnet format --verify-no-changes
+```
+
+Tests cover hand-calculated F1 cases, repeated tokens, Persian text, Unicode normalization, coverage errors, and failing gates. Share synthetic examples in [issues](https://github.com/alirezaRanjbar4/finetune-eval/issues/new/choose). See [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md).
+
+## فارسی
+
+خروجی مدل پایه و مدل پس از Fine-tuning را روی آزمون مرجع یکسان مقایسه می‌کند. شناسه‌های ناقص یا تکراری را رد می‌کند، امتیاز تطابق و F1 واژه‌ای را می‌دهد و با افت امتیاز می‌تواند CI را متوقف کند. این ابزار آموزش یا فراخوانی مدل انجام نمی‌دهد و امتیازهای آن ارزیابی معنایی یا صحت factual پاسخ نیستند.
+
+[MIT License](LICENSE)

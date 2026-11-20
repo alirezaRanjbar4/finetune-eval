@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>FineTuneEval</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>finetune-eval</ToolCommandName>
+    <PackageId>FineTuneEval.Tool</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>alirezaRanjbar4</Authors>
+    <Description>Compare baseline and fine-tuned model outputs against a fixed reference set with exact-match and token-F1 CI gates.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/alirezaRanjbar4/finetune-eval</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/alirezaRanjbar4/finetune-eval</PackageProjectUrl>
+    <PackageTags>dotnet;csharp;ai;machine-learning;training;cli</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>
