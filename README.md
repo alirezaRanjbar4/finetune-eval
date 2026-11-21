@@ -63,10 +63,10 @@ Reports contain aggregate scores, thresholds, and per-ID scores, without referen
 
 ## Install
 
-Download `FineTuneEval.Tool.0.2.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.2.0) into an empty folder:
+Download `FineTuneEval.Tool.0.3.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.3.0) into an empty folder:
 
 ```sh
-dotnet tool install --global FineTuneEval.Tool --version 0.2.0 --add-source ./downloaded-package
+dotnet tool install --global FineTuneEval.Tool --version 0.3.0 --add-source ./downloaded-package
 finetune-eval --help
 ```
 
@@ -74,7 +74,7 @@ Or build from source:
 
 ```sh
 dotnet pack src/Cli -c Release -o artifacts
-dotnet tool install --global FineTuneEval.Tool --version 0.2.0 --add-source ./artifacts
+dotnet tool install --global FineTuneEval.Tool --version 0.3.0 --add-source ./artifacts
 ```
 
 The tool has no runtime package dependencies. Packages are distributed through GitHub Releases, not NuGet.org.
@@ -103,6 +103,28 @@ Omitted gate fields inherit the corresponding aggregate thresholds, and resolved
 
 This catches a candidate that improves overall while regressing on a named subgroup; it does not change the lexical meaning or limitations of the underlying metrics.
 
+## Small-slice support warnings
+
+Use an explicit minimum case count to flag small slices before interpreting their scores:
+
+```sh
+finetune-eval compare --cases examples/cases.jsonl --baseline examples/baseline.jsonl --candidate examples/candidate.jsonl --slice-gates examples/slice-gates.json --min-slice-support 2
+```
+
+`--min-slice-support N` accepts a nonnegative 32-bit integer case count; the default `0` disables these warnings. Every observed tag with **fewer than N cases** gets one warning, whether gated or report-only. A slice exactly at the threshold does not warn. The example reports `fa` and `support` (one case each); `en` has two cases and does not warn. It still exits `0` because its score gates pass. The value `2` demonstrates the boundary; it is not a recommended evaluation sample size.
+
+The JSON report always includes `minimumSliceSupport` and a `supportWarnings` array (empty when no tags are affected). Each warning contains only `tag`, `cases`, `minimumSupport`, and `gated`, for example:
+
+```json
+{"tag":"fa","cases":1,"minimumSupport":2,"gated":true}
+```
+
+Warnings go only in JSON stdout, without reference/prediction text or extra stderr output. They do **not** change aggregate or slice scores, gate thresholds, pass/fail decisions, or exit codes. Invalid counts are input errors (exit `2`); unknown/zero-support gated tags remain input errors even when warnings are enabled.
+
+Overlapping tags are checked independently: one case contributes once to each of its tags, and may cause more than one tag warning. Untagged cases remain in aggregate scores and create no slice warning. Tags remain case-sensitive; warnings follow the same ordinal tag order as `slices`.
+
+These are sample-count warnings, **not statistical confidence intervals**, significance tests, or assurances that larger slices are representative or independent. Choose the threshold for your task and inspect data coverage and provenance separately.
+
 ## Development and feedback
 
 ```sh
@@ -115,5 +137,7 @@ Tests cover hand-calculated F1 cases, repeated tokens, Persian text, Unicode nor
 ## فارسی
 
 خروجی مدل پایه و مدل پس از Fine-tuning را روی آزمون مرجع یکسان مقایسه می‌کند. شناسه‌های ناقص یا تکراری را رد می‌کند، امتیاز تطابق و F1 واژه‌ای را می‌دهد و با افت امتیاز می‌تواند CI را متوقف کند. این ابزار آموزش یا فراخوانی مدل انجام نمی‌دهد و امتیازهای آن ارزیابی معنایی یا صحت factual پاسخ نیستند.
+
+گزینه `--min-slice-support` گروه‌های دارای نمونه کم را در گزارش مشخص می‌کند؛ این هشدار امتیازها و نتیجه CI را تغییر نمی‌دهد و به معنی فاصله اطمینان آماری نیست. مقدار پیش‌فرض صفر، هشدار را غیرفعال می‌کند.
 
 [MIT License](LICENSE)

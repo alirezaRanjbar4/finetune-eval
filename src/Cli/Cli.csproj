@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>finetune-eval</ToolCommandName>
     <PackageId>FineTuneEval.Tool</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>alirezaRanjbar4</Authors>
     <Description>Compare baseline and fine-tuned model outputs against a fixed reference set with exact-match and token-F1 CI gates.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

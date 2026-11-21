@@ -11,16 +11,20 @@ public sealed record ModelOutput(string? Id, string? Output);
 public sealed record Scores(double ExactMatch, double TokenF1);
 public sealed record CaseResult(string Id, Scores Baseline, Scores Candidate);
 public sealed record EvaluationReport(int Cases, Scores Baseline, Scores Candidate, Scores Delta, bool Passed,
-    double MinimumExactMatch, double MinimumTokenF1, double MaximumDrop, IReadOnlyList<CaseResult> Results, IReadOnlyList<SliceReport> Slices);
+    double MinimumExactMatch, double MinimumTokenF1, double MaximumDrop, IReadOnlyList<CaseResult> Results, IReadOnlyList<SliceReport> Slices,
+    int MinimumSliceSupport, IReadOnlyList<SliceSupportWarning> SupportWarnings);
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
 public sealed record SliceGate(double? MinExact = null, double? MinF1 = null, double? MaxDrop = null);
 public sealed record SliceReport(string Tag, int Cases, Scores Baseline, Scores Candidate, Scores Delta, SliceGate? Gate, bool? Passed);
+public sealed record SliceSupportWarning(string Tag, int Cases, int MinimumSupport, bool Gated);
 
 public static partial class Evaluator
 {
     public static EvaluationReport Compare(string casesPath, string baselinePath, string candidatePath,
-        double minimumExactMatch = 0, double minimumTokenF1 = 0, double maximumDrop = 1, IReadOnlyDictionary<string, SliceGate>? sliceGates = null)
+        double minimumExactMatch = 0, double minimumTokenF1 = 0, double maximumDrop = 1,
+        IReadOnlyDictionary<string, SliceGate>? sliceGates = null, int minimumSliceSupport = 0)
     {
+        if (minimumSliceSupport < 0) throw new InputException("Minimum slice support must be a nonnegative integer; 0 disables warnings.");
         foreach (var threshold in new[] { minimumExactMatch, minimumTokenF1, maximumDrop })
             if (!double.IsFinite(threshold) || threshold is < 0 or > 1)
                 throw new InputException("Thresholds must be finite numbers between 0 and 1.");
@@ -59,7 +63,10 @@ public static partial class Evaluator
                 gate is null ? null : Passes(c, d, gate.MinExact!.Value, gate.MinF1!.Value, gate.MaxDrop!.Value));
         }).ToArray();
         var passed = Passes(candidateScore, delta, minimumExactMatch, minimumTokenF1, maximumDrop) && slices.All(slice => slice.Passed != false);
-        return new(cases.Count, baselineScore, candidateScore, delta, passed, minimumExactMatch, minimumTokenF1, maximumDrop, results, slices);
+        var warnings = slices.Where(slice => slice.Cases < minimumSliceSupport)
+            .Select(slice => new SliceSupportWarning(slice.Tag, slice.Cases, minimumSliceSupport, slice.Gate is not null)).ToArray();
+        return new(cases.Count, baselineScore, candidateScore, delta, passed, minimumExactMatch, minimumTokenF1, maximumDrop, results, slices,
+            minimumSliceSupport, warnings);
     }
 
     public static IReadOnlyDictionary<string, SliceGate> LoadSliceGates(string path)
