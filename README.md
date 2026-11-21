@@ -63,10 +63,10 @@ Reports contain aggregate scores, thresholds, and per-ID scores, without referen
 
 ## Install
 
-Download `FineTuneEval.Tool.0.1.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.1.0) into an empty folder:
+Download `FineTuneEval.Tool.0.2.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.2.0) into an empty folder:
 
 ```sh
-dotnet tool install --global FineTuneEval.Tool --version 0.1.0 --add-source ./downloaded-package
+dotnet tool install --global FineTuneEval.Tool --version 0.2.0 --add-source ./downloaded-package
 finetune-eval --help
 ```
 
@@ -74,10 +74,34 @@ Or build from source:
 
 ```sh
 dotnet pack src/Cli -c Release -o artifacts
-dotnet tool install --global FineTuneEval.Tool --version 0.1.0 --add-source ./artifacts
+dotnet tool install --global FineTuneEval.Tool --version 0.2.0 --add-source ./artifacts
 ```
 
 The tool has no runtime package dependencies. Packages are distributed through GitHub Releases, not NuGet.org.
+
+## Tagged slices and per-slice gates
+
+Cases can include optional, unique, nonblank, case-sensitive tags:
+
+```json
+{"id":"support-fa","references":["از بخش پشتیبانی پیام بفرستید"],"tags":["fa","support"]}
+```
+
+Every observed tag gets a `slices` report with its support, baseline/candidate scores, and deltas. Tags can overlap; an example counts once per tag, so slice counts need not sum to the overall count. Untagged examples still contribute to aggregate scores. Tags without an explicit gate have `gate: null` and `passed: null` and do not affect pass/fail.
+
+```sh
+finetune-eval compare --cases examples/cases.jsonl --baseline examples/baseline.jsonl --candidate examples/candidate.jsonl --slice-gates examples/slice-gates.json
+```
+
+Gate configuration is a JSON object keyed by tag, with `minExact`, `minF1`, and/or `maxDrop`:
+
+```json
+{"fa":{"minExact":1,"minF1":1,"maxDrop":0}}
+```
+
+Omitted gate fields inherit the corresponding aggregate thresholds, and resolved fields are included in the report. Aggregate gates remain in force. Exit `1` means the aggregate or any explicitly gated slice failed. Unknown/zero-support gate tags, duplicate/blank case tags, unknown threshold names, duplicate JSON properties, and thresholds outside [0,1] are invalid input (exit `2`). There are no zero-support score averages.
+
+This catches a candidate that improves overall while regressing on a named subgroup; it does not change the lexical meaning or limitations of the underlying metrics.
 
 ## Development and feedback
 

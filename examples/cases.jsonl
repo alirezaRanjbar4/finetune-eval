@@ -1,3 +1,3 @@
-{"id":"refund","references":["14 days","fourteen days"]}
-{"id":"shipping","references":["3 to 5 business days"]}
-{"id":"support-fa","references":["از بخش پشتیبانی پیام بفرستید"]}
+{"id":"refund","references":["14 days","fourteen days"],"tags":["en"]}
+{"id":"shipping","references":["3 to 5 business days"],"tags":["en"]}
+{"id":"support-fa","references":["از بخش پشتیبانی پیام بفرستید"],"tags":["fa","support"]}

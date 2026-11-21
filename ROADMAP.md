@@ -6,9 +6,13 @@
 - Best-reference exact match and Unicode word-token F1.
 - Complete ID coverage checks, per-case results, and CI gates.
 
+## Delivered in v0.2.0
+
+Added optional case tags, per-slice score reports, and explicit per-tag quality gates with complete support/threshold validation.
+
 ## Next
 
-- Add tagged slices so average improvements cannot hide failures on a subgroup.
+- Add optional minimum-support warnings for small slices.
 - Add structured JSON-output validators and task-specific deterministic metrics.
 - Evaluate paired bootstrap confidence intervals for supported metrics.
 
