@@ -10,9 +10,17 @@
 
 Added optional case tags, per-slice score reports, and explicit per-tag quality gates with complete support/threshold validation.
 
-## Next
+## Delivered in v0.3.0
 
-- Add optional minimum-support warnings for small slices.
+Explicit minimum-support warnings for small gated and report-only slices, without changing scores, gates or exit codes.
+
+## First-scope completion
+
+- Add concise architecture and troubleshooting documentation.
+- Validate the documented installation and workflows in a closing release.
+
+## Future candidates
+
 - Add structured JSON-output validators and task-specific deterministic metrics.
 - Evaluate paired bootstrap confidence intervals for supported metrics.
 
