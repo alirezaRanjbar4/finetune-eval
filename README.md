@@ -132,6 +132,8 @@ dotnet test -c Release
 dotnet format --verify-no-changes
 ```
 
+The [design guide](docs/DESIGN.md) explains ID coverage, lexical metrics, overlapping slices, score gates and separate support warnings. Use the [troubleshooting guide](docs/TROUBLESHOOTING.md) for installation, invalid inputs/options and unexpected metric or gate results.
+
 Tests cover hand-calculated F1 cases, repeated tokens, Persian text, Unicode normalization, coverage errors, and failing gates. Share synthetic examples in [issues](https://github.com/alirezaRanjbar4/finetune-eval/issues/new/choose). See [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md).
 
 ## فارسی
