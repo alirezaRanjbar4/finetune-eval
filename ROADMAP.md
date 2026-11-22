@@ -16,8 +16,9 @@ Explicit minimum-support warnings for small gated and report-only slices, withou
 
 ## First-scope completion
 
-- Add concise architecture and troubleshooting documentation.
-- Validate the documented installation and workflows in a closing release.
+The [design guide](docs/DESIGN.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md) are delivered on main, with commands for the current published v0.3.0 package. The bounded scope is complete coverage, best-reference lexical metrics, tagged slices, explicit score gates and support warnings, plus user/developer guides.
+
+Issue #4 still requires a validated closing release: consistent versions/docs, packaged install/examples, supported-platform CI and published checksums. Complete that acceptance before entering maintenance. Future candidates below remain optional rather than extending the first scope.
 
 ## Future candidates
 
