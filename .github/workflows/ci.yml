@@ -22,3 +22,5 @@ jobs:
       - run: dotnet test -c Release
       - run: dotnet format --verify-no-changes --no-restore
       - run: dotnet pack src/Cli -c Release --no-restore -o artifacts
+      - run: ./examples/Smoke.ps1 -ExpectedCommit $env:GITHUB_SHA
+        shell: pwsh

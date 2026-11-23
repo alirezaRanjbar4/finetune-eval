@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>finetune-eval</ToolCommandName>
     <PackageId>FineTuneEval.Tool</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Authors>alirezaRanjbar4</Authors>
     <Description>Compare baseline and fine-tuned model outputs against a fixed reference set with exact-match and token-F1 CI gates.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,6 +16,9 @@
     <PackageTags>dotnet;csharp;ai;machine-learning;training;cli</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../README.md;../../LICENSE;../../CONTRIBUTING.md;../../ROADMAP.md;../../CHANGELOG.md" Pack="true" PackagePath="/" />
+    <None Include="../../docs/*.md" Pack="true" PackagePath="docs/" />
+    <None Include="../../examples/*.json;../../examples/*.jsonl;../../examples/*.md" Pack="true" PackagePath="examples/" />
+    <None Include="../../.github/workflows/ci.yml" Pack="true" PackagePath=".github/workflows/" />
   </ItemGroup>
 </Project>

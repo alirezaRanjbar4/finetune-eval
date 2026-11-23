@@ -1,13 +1,13 @@
 # Troubleshooting
 
-Commands target the published **0.3.0** package and synthetic repository examples. Run from the repository root. See the [README](../README.md) for schemas/options and the [design guide](DESIGN.md) for scoring, slices and warning policy.
+Commands target the published **0.3.1** package and synthetic repository examples. Run from the repository root. See the [README](../README.md) for schemas/options and the [design guide](DESIGN.md) for scoring, slices and warning policy.
 
 ## Install and find the intended executable
 
-Download `FineTuneEval.Tool.0.3.0.nupkg` and `SHA256SUMS.txt` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.3.0) into an empty `downloaded-package` folder. Check the package SHA-256, then choose a fresh isolated tool path:
+Download `FineTuneEval.Tool.0.3.1.nupkg` and `SHA256SUMS.txt` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.3.1) into an empty `downloaded-package` folder. Check the package SHA-256, then choose a fresh isolated tool path:
 
 ```sh
-dotnet tool install FineTuneEval.Tool --version 0.3.0 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
+dotnet tool install FineTuneEval.Tool --version 0.3.1 --tool-path ./artifacts/handoff-tool --add-source ./downloaded-package
 ```
 
 Run `./artifacts/handoff-tool/finetune-eval --version` on Linux/macOS or `.\artifacts\handoff-tool\finetune-eval.exe --version` in PowerShell. For an existing isolated installation, use `dotnet tool update` with the same package/version/source/tool-path options. Global installs use `--global` instead of `--tool-path ...`; inspect `dotnet tool list --global` and PATH when the command is missing.
