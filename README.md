@@ -63,10 +63,10 @@ Reports contain aggregate scores, thresholds, and per-ID scores, without referen
 
 ## Install
 
-Download `FineTuneEval.Tool.0.3.0.nupkg` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.3.0) into an empty folder:
+Download `FineTuneEval.Tool.0.3.1.nupkg` and `SHA256SUMS.txt` from the [release](https://github.com/alirezaRanjbar4/finetune-eval/releases/tag/v0.3.1) into an empty `downloaded-package` folder. Compare the package's SHA-256 with the checksum before installing, using `Get-FileHash -Algorithm SHA256` or `sha256sum`. A checksum published beside an asset detects corruption; it is not an independent signature or provenance attestation.
 
 ```sh
-dotnet tool install --global FineTuneEval.Tool --version 0.3.0 --add-source ./downloaded-package
+dotnet tool install --global FineTuneEval.Tool --version 0.3.1 --add-source ./downloaded-package
 finetune-eval --help
 ```
 
@@ -74,10 +74,10 @@ Or build from source:
 
 ```sh
 dotnet pack src/Cli -c Release -o artifacts
-dotnet tool install --global FineTuneEval.Tool --version 0.3.0 --add-source ./artifacts
+dotnet tool install --global FineTuneEval.Tool --version 0.3.1 --add-source ./artifacts
 ```
 
-The tool has no runtime package dependencies. Packages are distributed through GitHub Releases, not NuGet.org.
+The installed tool needs the .NET 10 runtime; installation/build commands need the SDK. It has no runtime package dependencies. Packages are distributed through GitHub Releases, not NuGet.org. The archive includes the linked guides, license and [synthetic examples](examples/README.md), so the packaged README's local links work offline.
 
 ## Tagged slices and per-slice gates
 
@@ -130,11 +130,15 @@ These are sample-count warnings, **not statistical confidence intervals**, signi
 ```sh
 dotnet test -c Release
 dotnet format --verify-no-changes
+dotnet pack src/Cli -c Release -o artifacts
+pwsh -File examples/Smoke.ps1
 ```
 
 The [design guide](docs/DESIGN.md) explains ID coverage, lexical metrics, overlapping slices, score gates and separate support warnings. Use the [troubleshooting guide](docs/TROUBLESHOOTING.md) for installation, invalid inputs/options and unexpected metric or gate results.
 
 Tests cover hand-calculated F1 cases, repeated tokens, Persian text, Unicode normalization, coverage errors, and failing gates. Share synthetic examples in [issues](https://github.com/alirezaRanjbar4/finetune-eval/issues/new/choose). See [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md).
+
+The installed-package smoke checks final Git commit metadata, bundled examples/docs, 0/1/2 exits, unchanged inputs and support-warning boundaries on Windows/Linux/macOS. Commit intended changes before packing for that final-commit check. The [bounded first scope](ROADMAP.md) is handed off in v0.3.1; the repository stays public for reproducible bugs and feedback.
 
 ## فارسی
 

@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 — 2026-11-23
 
-Added linked design and troubleshooting guides for ID coverage, lexical scoring, overlapping slices, gates versus support warnings, error contracts and privacy/provenance limits. Closing-release acceptance remains pending under issue #4.
+Package the linked design/troubleshooting and contributor/roadmap/changelog/license files, plus runnable synthetic input/gate examples. Align installation and CLI version with this handoff release. Add an isolated local-feed installed-package smoke for final-commit metadata, bundled example bytes, support-warning boundaries, unchanged scores/inputs and 0/1/2 exits on all supported CI platforms. Scoring and gate behavior are unchanged from 0.3.0. This is the closing release for the bounded first scope in issue #4, subject to final package/tag/asset verification before maintenance.
 
 ## 0.3.0 — 2026-11-21
 

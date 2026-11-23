@@ -16,9 +16,9 @@ Explicit minimum-support warnings for small gated and report-only slices, withou
 
 ## First-scope completion
 
-The [design guide](docs/DESIGN.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md) are delivered on main, with commands for the current published v0.3.0 package. The bounded scope is complete coverage, best-reference lexical metrics, tagged slices, explicit score gates and support warnings, plus user/developer guides.
+The [design guide](docs/DESIGN.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md) ship with v0.3.1, along with the license, contributor/roadmap/changelog files and synthetic examples. The bounded scope is complete coverage, best-reference lexical metrics, tagged slices, explicit score gates and support warnings, plus user/developer guides.
 
-Issue #4 still requires a validated closing release: consistent versions/docs, packaged install/examples, supported-platform CI and published checksums. Complete that acceptance before entering maintenance. Future candidates below remain optional rather than extending the first scope.
+The v0.3.1 handoff retains that fixed scope. Before closing issue #4, verify final-main/tag/package commit consistency, supported-platform CI, isolated installed-package examples, bundled links and downloaded public package/checksum digests. Record the publication evidence in the issue. Then keep the repository public/unarchived in maintenance for reproducible bugs and feedback. Future candidates below remain optional rather than extending the first scope.
 
 ## Future candidates
 
