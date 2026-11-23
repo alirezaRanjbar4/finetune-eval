@@ -18,7 +18,7 @@
   <ItemGroup>
     <None Include="../../README.md;../../LICENSE;../../CONTRIBUTING.md;../../ROADMAP.md;../../CHANGELOG.md" Pack="true" PackagePath="/" />
     <None Include="../../docs/*.md" Pack="true" PackagePath="docs/" />
-    <None Include="../../examples/*.json;../../examples/*.jsonl;../../examples/*.md;../../examples/Smoke.ps1" Pack="true" PackagePath="examples/" />
+    <None Include="../../examples/*.json;../../examples/*.jsonl;../../examples/*.md" Pack="true" PackagePath="examples/" />
     <None Include="../../.github/workflows/ci.yml" Pack="true" PackagePath=".github/workflows/" />
   </ItemGroup>
 </Project>

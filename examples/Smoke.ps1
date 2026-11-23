@@ -14,7 +14,7 @@ try {
     New-Item -ItemType Directory -Path $fixtureDirectory -Force|Out-Null
     $archive=[IO.Compression.ZipFile]::OpenRead($package)
     try {
-        foreach($name in @('README.md','LICENSE','CONTRIBUTING.md','ROADMAP.md','CHANGELOG.md','docs/DESIGN.md','docs/TROUBLESHOOTING.md','examples/README.md','examples/Smoke.ps1','.github/workflows/ci.yml')) {
+        foreach($name in @('README.md','LICENSE','CONTRIBUTING.md','ROADMAP.md','CHANGELOG.md','docs/DESIGN.md','docs/TROUBLESHOOTING.md','examples/README.md','.github/workflows/ci.yml')) {
             if(-not $archive.GetEntry($name)){throw ('Missing packaged document: '+$name)}
         }
         $manifests=@($archive.Entries|Where-Object {$_.FullName -notmatch '/' -and $_.FullName.EndsWith('.nuspec')})
@@ -48,7 +48,7 @@ try {
     if($LASTEXITCODE -ne 0){throw 'Fresh local-only installation failed.'}
     $tool=Join-Path $toolDirectory 'finetune-eval'
     if((& $tool --version) -ne '0.3.1' -or $LASTEXITCODE -ne 0){throw 'Installed version mismatch.'}
-    $installed=@(Get-ChildItem -LiteralPath $toolDirectory -Recurse -Filter FineTuneEval.dll)
+    $installed=@(Get-ChildItem -LiteralPath $toolDirectory -Recurse -Force -Filter FineTuneEval.dll)
     if($installed.Count -ne 1 -or (Get-FileHash -LiteralPath $installed[0].FullName -Algorithm SHA256).Hash -ne $assemblyHash){throw 'Installed assembly differs from package payload.'}
     $inputs=@('cases.jsonl','baseline.jsonl','candidate.jsonl','slice-gates.json')|ForEach-Object {Join-Path $fixtureDirectory $_}
     $before=@($inputs|ForEach-Object {(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash})
